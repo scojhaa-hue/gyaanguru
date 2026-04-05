@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="hi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ओझा जी का ज्ञानगुरु v43.0 - अक्षय ब्रह्मास्त्र</title>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Devanagari:wght@400;700&family=Handlee&display=swap" rel="stylesheet">
+    <style>
+        :root { --p1: #CC5500; --p2: #FF6B00; --bg: #FFF8F0; --txt: #3E1F00; }
+        body { margin: 0; font-family: 'Noto Sans Devanagari', sans-serif; background: var(--bg); color: var(--txt); }
+        .header { background: var(--p1); color: #fff; padding: 25px; text-align: center; font-size: 32px; font-weight: 800; border-bottom: 6px solid var(--p2); box-shadow: 0 4px 15px rgba(0,0,0,0.2); position: sticky; top: 0; z-index: 1000; }
+        .container { max-width: 1100px; margin: 30px auto; padding: 30px; background: #fff; border-radius: 25px; box-shadow: 0 10px 50px rgba(0,0,0,0.1); min-height: 85vh; border: 1px solid #F0E0CC; }
+        .wb-screen { background: #051a05; color: #d4ffd4; padding: 40px; border-radius: 20px; border: 12px solid #3e2f1a; font-family: 'Handlee', cursive; font-size: 32px; line-height: 1.8; min-height: 300px; display: flex; align-items: center; justify-content: center; text-align: center; box-shadow: inset 0 0 50px #000; margin-bottom: 30px; }
+        .grid-cls { display: grid; grid-template-columns: repeat(7, 1fr); gap: 12px; margin: 30px 0; }
+        .btn-cls { padding: 18px; border-radius: 12px; border: 1px solid #ddd; background: #fff; font-weight: bold; cursor: pointer; font-size: 20px; transition: 0.3s; }
+        .btn-cls.active { background: var(--p1); color: #fff; transform: translateY(-5px); box-shadow: 0 5px 15px rgba(204,85,0,0.3); }
+        .grid-sub { display: grid; grid-template-columns: repeat(4, 1fr); gap: 15px; margin-top: 25px; }
+        .card-sub { padding: 25px; border: 1px solid #eee; border-radius: 15px; cursor: pointer; text-align: center; background: #fdfdfd; transition: 0.3s; border-bottom: 4px solid #eee; }
+        .card-sub:hover { border-color: var(--p1); transform: translateY(-5px); background: #fff8f2; }
+        .chapter-box { border: 2px solid var(--p1); border-radius: 20px; padding: 25px; background: #fffdfb; margin-top: 30px; max-height: 500px; overflow-y: auto; }
+        .ch-item { padding: 15px; border-bottom: 1px solid #eee; cursor: pointer; font-size: 19px; transition: 0.2s; }
+        .ch-item:hover { color: var(--p1); font-weight: bold; padding-left: 25px; background: #fff5eb; }
+        .chat-wrap { display: none; flex-direction: column; height: 800px; }
+        .tool-bar { display: flex; gap: 10px; margin-bottom: 15px; }
+        .tool-btn { flex: 1; padding: 15px; border: none; border-radius: 12px; color: #fff; font-weight: bold; cursor: pointer; font-size: 16px; transition: 0.3s; }
+        .btn-notes { background: #1B5E20; } .btn-qa { background: #0D47A1; } .btn-trick { background: #B71C1C; }
+        .msg-area { flex: 1; overflow-y: auto; padding: 25px; border: 1px solid #eee; border-radius: 20px; background: #fff; margin-bottom: 20px; display: flex; flex-direction: column; }
+        .msg { margin: 12px 0; padding: 20px; border-radius: 18px; max-width: 80%; font-size: 19px; line-height: 1.8; }
+        .u-msg { background: var(--p2); color: #fff; align-self: flex-end; border-bottom-right-radius: 2px; }
+        .a-msg { background: #f5f5f5; color: #333; align-self: flex-start; border-left: 8px solid var(--p1); border-bottom-left-radius: 2px; white-space: pre-wrap; }
+        .input-bar { display: flex; gap: 12px; padding: 12px; background: #f0f0f0; border-radius: 15px; }
+        .inp { flex: 1; padding: 18px; border-radius: 12px; border: 1px solid #ddd; font-size: 20px; outline: none; }
+        .btn-send { background: var(--p1); color: #fff; border: none; padding: 0 45px; border-radius: 12px; font-weight: bold; font-size: 20px; cursor: pointer; }
+        .hidden { display: none; }
+    </style>
+</head>
+<body>
+
+    <div class="header">🧙‍♂️ ओझा जी का ज्ञानगुरु v43.0</div>
+
+    <div class="container">
+        <div id="logo-screen" class="wb-screen"></div>
+
+        <div id="home-screen" class="hidden">
+            <h1 style="text-align: center; color: var(--p1);">सतीश चंद्र ओझा जी, स्वागत है!</h1>
+            <h3>1. कक्षा चुनें:</h3>
+            <div class="grid-cls" id="cls-grid"></div>
+            
+            <div id="sub-section" class="hidden">
+                <h3>2. विषय चुनें (Full NCERT 2026):</h3>
+                <div id="sub-grid" class="grid-sub"></div>
+            </div>
+
+            <div id="chapter-section" class="chapter-box hidden">
+                <h3 id="ch-head" style="color: var(--p1); margin-top: 0;"></h3>
+                <div id="ch-list"></div>
+            </div>
+        </div>
+
+        <div id="chat-screen" class="chat-wrap">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+                <button onclick="goHome()" style="background: none; border: none; color: #CC5500; font-weight: bold; font-size: 22px; cursor: pointer;">← पीछे</button>
+                <b id="chat-title" style="color: #CC5500; font-size: 24px;"></b>
+            </div>
+            <div class="tool-bar">
+                <button onclick="askTool('notes')" class="tool-btn btn-notes">📋 नोट्स</button>
+                <button onclick="askTool('qa')" class="tool-btn btn-qa">❓ प्रश्न-उत्तर</button>
+                <button onclick="askTool('mnemonic')" class="tool-btn btn-trick">💡 मनेमोनिक्स ट्रिक</button>
+            </div>
+            <div id="msg-area" class="msg-area"></div>
+            <div class="input-bar">
+                <input type="text" id="user-input" class="inp" placeholder="यहाँ प्रश्न पूछें...">
+                <button id="send-btn" onclick="send()" class="btn-send">पूछें</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const API_KEY = "AIzaSyBQvZVOZq6aJ0mNwBjugGEqaGvcX_4NjZE";
+        let selC, selS, selH;
+
+        const MASTER_DB = {
+            subjects: {
+                6: [ {n:"विज्ञान", ic:"🔬"}, {n:"गणित", ic:"🔢"}, {n:"सामाजिक", ic:"🌍"}, {n:"हिंदी", ic:"📝"}, {n:"English", ic:"📚"}, {n:"संस्कृत", ic:"🕉️"} ],
+                9: [ {n:"विज्ञान", ic:"🔬"}, {n:"गणित", ic:"🔢"}, {n:"सामाजिक", ic:"🌍"}, {n:"I.T.", ic:"💻"}, {n:"टूरिज्म", ic:"✈️"}, {n:"हिंदी", ic:"📝"}, {n:"English", ic:"📚"}, {n:"संस्कृत", ic:"🕉️"} ],
+                11: [ 
+                    {n:"Physics", ic:"⚛️"}, {n:"Chemistry", ic:"🧪"}, {n:"Biology", ic:"🌿"}, {n:"Maths", ic:"🔢"},
+                    {n:"Pol. Science", ic:"⚖️"}, {n:"History", ic:"📜"}, {n:"Geography", ic:"🗺️"}, {n:"Economics", ic:"📊"},
+                    {n:"Accounts", ic:"🧾"}, {n:"Business Studies", ic:"💼"}, {n:"I.T.", ic:"💻"}, {n:"टूरिज्म", ic:"✈️"},
+                    {n:"English", ic:"📚"}, {n:"हिंदी", ic:"📝"}
+                ]
+            },
+            chapters: {
+                "विज्ञान-6": ["भोजन के घटक", "वस्तुओं के समूह बनाना", "पदार्थों का पृथक्करण", "पौधों को जानिए", "शरीर में गति", "सजीव एवं उनका परिवेश"],
+                "Pol. Science-11": ["संविधान: क्यों और कैसे?", "भारतीय संविधान में अधिकार", "चुनाव और प्रतिनिधित्व", "कार्यपालिका", "विधायिका", "न्यायपालिका"],
+                "I.T.-9": ["आईटी का परिचय", "डेटा एंट्री और कीबोर्डिंग", "डिजिटल डॉक्यूमेंटेशन", "इलेक्ट्रॉनिक स्प्रेडशीट"],
+                "टूरिज्म-11": ["पर्यटन का परिचय", "पर्यटन के घटक", "पर्यटन के प्रकार", "पर्यटन का प्रभाव"]
+            }
+        };
+        [7,8,10,12].forEach(c => MASTER_DB.subjects[c] = (c < 9) ? MASTER_DB.subjects[6] : (c < 11 ? MASTER_DB.subjects[9] : MASTER_DB.subjects[11]));
+
+        const logoT = "GyaanGuru v43.0\nBy Satish Chandra Ojha\n\n\"अब मनेमोनिक्स, नोट्स और प्रश्नोत्तर एक ही जगह!\"\n\n\"जादू शुरू हो रहा है...\"";
+        let charI = 0;
+
+        function type() {
+            if (charI < logoT.length) {
+                document.getElementById('logo-screen').innerText += logoT[charI++];
+                setTimeout(type, 40);
+            } else {
+                setTimeout(() => {
+                    document.getElementById('logo-screen').classList.add('hidden');
+                    document.getElementById('home-screen').classList.remove('hidden');
+                    renderC();
+                }, 1500);
+            }
+        }
+
+        function renderC() {
+            const g = document.getElementById('cls-grid');
+            [6,7,8,9,10,11,12].forEach(c => {
+                const b = document.createElement('button'); b.className = 'btn-cls'; b.innerText = c;
+                b.onclick = () => {
+                    selC = c; document.querySelectorAll('.btn-cls').forEach(x => x.classList.remove('active'));
+                    b.classList.add('active'); document.getElementById('sub-section').classList.remove('hidden');
+                    document.getElementById('chapter-section').classList.add('hidden'); renderS(c);
+                };
+                g.appendChild(b);
+            });
+        }
+
+        function renderS(c) {
+            const g = document.getElementById('sub-grid'); g.innerHTML = "";
+            MASTER_DB.subjects[c].forEach(s => {
+                const k = document.createElement('div'); k.className = 'card-sub';
+                k.innerHTML = `<span style="font-size:45px">${s.ic}</span><br><b>${s.n}</b>`;
+                k.onclick = () => { selS = s.n; showCh(); };
+                g.appendChild(k);
+            });
+        }
+
+        function showCh() {
+            const b = document.getElementById('chapter-section'); const l = document.getElementById('ch-list');
+            document.getElementById('ch-head').innerText = `📖 ${selS} (कक्षा ${selC}) - अध्याय सूची:`;
+            b.classList.remove('hidden'); l.innerHTML = "";
+            const key = `${selS}-${selC}`;
+            const chs = MASTER_DB.chapters[key] || ["परिचय", "मुख्य अवधारणाएँ", "अभ्यास प्रश्न", "सारांश और नोट्स"];
+            chs.forEach((x, i) => {
+                const d = document.createElement('div'); d.className = 'ch-item'; d.innerText = `${i+1}. ${x}`;
+                d.onclick = () => {
+                    selH = x; document.getElementById('home-screen').classList.add('hidden');
+                    document.getElementById('chat-screen').style.display = 'flex';
+                    document.getElementById('chat-title').innerText = `${selS}: ${x}`;
+                    addMsg(`सतीश जी! आज हम "${x}" पढ़ेंगे। नीचे बटन दबाकर नोट्स या ट्रिक प्राप्त करें।`, 'a');
+                };
+                l.appendChild(d);
+            });
+            b.scrollIntoView({ behavior: 'smooth' });
+        }
+
+        function addMsg(t, y) {
+            const a = document.getElementById('msg-area');
+            const d = document.createElement('div'); d.className = `msg ${y}-msg`; d.innerText = t;
+            a.appendChild(d); a.scrollTop = a.scrollHeight;
+        }
+
+        async function askTool(t) {
+            let p = "";
+            if(t === 'notes') p = `कृपया अध्याय "${selH}" के मुख्य परीक्षा नोट्स बिंदुवार हिंदी में दें।`;
+            if(t === 'qa') p = `कृपया अध्याय "${selH}" के 5 महत्वपूर्ण प्रश्न और उत्तर हिंदी में दें।`;
+            if(t === 'mnemonic') p = `कृपया अध्याय "${selH}" को याद करने की मनेमोनिक्स ट्रिक बताएं।`;
+            addMsg(p, 'u'); await call(p);
+        }
+
+        async function send() {
+            const i = document.getElementById('user-input'); const v = i.value.trim();
+            if(!v) return; addMsg(v, 'u'); i.value = ""; await call(v);
+        }
+
+        async function call(m) {
+            const btn = document.getElementById('send-btn'); btn.disabled = true;
+            const sys = `आप ओझा जी हैं। कक्षा ${selC}, विषय ${selS}, अध्याय ${selH} के शिक्षक। हिंदी में जवाब दें। मनेमोनिक्स का उपयोग करें।`;
+            try {
+                const res = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${API_KEY}`, {
+                    method: "POST", headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({ contents: [{ parts: [{ text: sys + "\n\nUser: " + m }] }] })
+                });
+                const d = await res.json(); addMsg(d.candidates[0].content.parts[0].text, 'a');
+            } catch (e) { addMsg("ओझा जी: क्षमा करें, इंटरनेट डेटा धीमा है। कृपया दोबारा पूछें।", 'a'); }
+            btn.disabled = false;
+        }
+
+        function goHome() {
+            document.getElementById('chat-screen').style.display = 'none';
+            document.getElementById('home-screen').classList.remove('hidden');
+            document.getElementById('msg-area').innerHTML = "";
+        }
+        window.onload = type;
+    </script>
+</body>
+</html>
