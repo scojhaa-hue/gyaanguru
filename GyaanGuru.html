@@ -1,0 +1,130 @@
+﻿<!DOCTYPE html>
+<html lang="hi">
+<head>
+    <meta charset="UTF-8">
+    <title>ओझा जी का ज्ञानगुरु v42.0 - Global Edition</title>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Devanagari:wght@400;700&family=Handlee&display=swap" rel="stylesheet">
+    <style>
+        :root { --p1: #CC5500; --p2: #FF6B00; --bg: #FFF8F0; --txt: #3E1F00; }
+        body { margin: 0; font-family: 'Noto Sans Devanagari', sans-serif; background: var(--bg); color: var(--txt); }
+        .header { background: var(--p1); color: #fff; padding: 20px; text-align: center; font-size: 28px; font-weight: bold; border-bottom: 5px solid var(--p2); }
+        .container { max-width: 900px; margin: 20px auto; padding: 20px; background: #fff; border-radius: 15px; box-shadow: 0 5px 25px rgba(0,0,0,0.1); min-height: 80vh; }
+        .wb-screen { background: #051a05; color: #d4ffd4; padding: 30px; border-radius: 15px; border: 8px solid #3e2f1a; font-family: 'Handlee', cursive; font-size: 26px; text-align: center; min-height: 250px; display: flex; align-items: center; justify-content: center; }
+        .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(120px, 1fr)); gap: 10px; margin: 20px 0; }
+        .btn { padding: 12px; border: 1px solid #ddd; border-radius: 8px; background: #fff; cursor: pointer; font-weight: bold; }
+        .btn.active { background: var(--p1); color: #fff; }
+        .chat-box { display: none; flex-direction: column; height: 600px; }
+        .msg-area { flex: 1; overflow-y: auto; padding: 15px; border: 1px solid #eee; border-radius: 10px; margin-bottom: 15px; }
+        .msg { margin: 10px 0; padding: 12px; border-radius: 10px; max-width: 85%; font-size: 18px; line-height: 1.6; }
+        .u-msg { background: var(--p2); color: #fff; align-self: flex-end; margin-left: auto; }
+        .a-msg { background: #f1f1f1; color: #333; border-left: 5px solid var(--p1); white-space: pre-wrap; }
+        .tools { display: flex; gap: 5px; margin-bottom: 10px; }
+        .t-btn { flex: 1; padding: 10px; border: none; border-radius: 5px; background: #1B5E20; color: #fff; font-weight: bold; cursor: pointer; font-size: 14px; }
+        .input-bar { display: flex; gap: 10px; }
+        .inp { flex: 1; padding: 15px; border-radius: 8px; border: 1px solid #ddd; font-size: 16px; }
+        .btn-send { background: var(--p1); color: #fff; border: none; padding: 0 25px; border-radius: 8px; font-weight: bold; cursor: pointer; }
+    </style>
+</head>
+<body>
+    <div class="header">🧙‍♂️ ओझा जी का ज्ञानगुरु v42.0</div>
+    <div class="container">
+        <div id="logo-screen" class="wb-screen"></div>
+        <div id="home" style="display:none">
+            <h2 style="text-align:center;color:var(--p1)">सतीश चंद्र ओझा जी, स्वागत है!</h2>
+            <h3>कक्षा चुनें:</h3>
+            <div id="cls-grid" class="grid"></div>
+            <div id="sub-sec" style="display:none">
+                <h3>विषय चुनें:</h3>
+                <div id="sub-grid" class="grid"></div>
+            </div>
+            <div id="ch-sec" style="display:none; border:2px solid var(--p1); padding:15px; border-radius:10px; margin-top:15px;">
+                <h3 style="color:var(--p1)">अध्याय चुनें:</h3>
+                <div id="ch-list"></div>
+            </div>
+        </div>
+        <div id="chat" class="chat-box">
+            <div style="display:flex; justify-content:space-between; margin-bottom:10px">
+                <button onclick="location.reload()" style="background:none; border:none; color:var(--p1); font-weight:bold; cursor:pointer">← पीछे</button>
+                <b id="chat-title" style="color:var(--p1)"></b>
+            </div>
+            <div class="tools">
+                <button onclick="ask('notes')" class="t-btn">📝 नोट्स</button>
+                <button onclick="ask('qa')" class="t-btn">❓ प्रश्न-उत्तर</button>
+                <button onclick="ask('trick')" class="t-btn">💡 ट्रिक</button>
+            </div>
+            <div id="msg-area" class="msg-area" style="display:flex; flex-direction:column"></div>
+            <div class="input-bar">
+                <input type="text" id="inp" class="inp" placeholder="पूछें...">
+                <button onclick="sendMsg()" class="btn-send">भेजें</button>
+            </div>
+        </div>
+    </div>
+    <script>
+        const API_KEY = "AIzaSyBQvZVOZq6aJ0mNwBjugGEqaGvcX_4NjZE";
+        let cL, sB, cH;
+        const DB = {
+            6: [{n:"विज्ञान", ic:"🔬"}, {n:"गणित", ic:"🔢"}, {n:"सामाजिक", ic:"🌍"}],
+            11: [{n:"Physics", ic:"⚛️"}, {n:"Biology", ic:"🌿"}, {n:"Pol. Sci", ic:"⚖️"}]
+        };
+        const logoT = "GyaanGuru v42.0\nसतीश चंद्र ओझा जी...\n\n\"अब यह ऐप इंटरनेट पर लाइव होगा!\"\n\n\"तैयार हो जाइए...\"";
+        let charI = 0;
+        function type() {
+            if (charI < logoT.length) {
+                document.getElementById('logo-screen').innerText += logoT[charI++];
+                setTimeout(type, 40);
+            } else {
+                setTimeout(() => {
+                    document.getElementById('logo-screen').style.display = 'none';
+                    document.getElementById('home').style.display = 'block';
+                    renderC();
+                }, 1500);
+            }
+        }
+        function renderC() {
+            const g = document.getElementById('cls-grid');
+            [6,7,8,9,10,11,12].forEach(c => {
+                const b = document.createElement('button'); b.className='btn'; b.innerText=c;
+                b.onclick = () => { cL=c; document.getElementById('sub-sec').style.display='block'; renderS(c); };
+                g.appendChild(b);
+            });
+        }
+        function renderS(c) {
+            const g = document.getElementById('sub-grid'); g.innerHTML="";
+            (DB[c] || DB[6]).forEach(s => {
+                const b = document.createElement('div'); b.className='card-sub'; b.innerHTML=`${s.ic}<br>${s.n}`;
+                b.onclick = () => { sB=s.n; showCh(); }; g.appendChild(b);
+            });
+        }
+        function showCh() {
+            const s = document.getElementById('ch-sec'); const l = document.getElementById('ch-list');
+            s.style.display='block'; l.innerHTML="";
+            ["1. परिचय", "2. मुख्य बिंदु", "3. प्रश्न-उत्तर"].forEach(x => {
+                const d = document.createElement('div'); d.style.padding="10px"; d.style.cursor="pointer"; d.innerText=x;
+                d.onclick = () => { cH=x; document.getElementById('home').style.display='none'; document.getElementById('chat').style.display='flex'; document.getElementById('chat-title').innerText=`${sB}: ${x}`; };
+                l.appendChild(d);
+            });
+        }
+        function addM(t, y) {
+            const a = document.getElementById('msg-area'); const d = document.createElement('div');
+            d.className=`msg ${y}-msg`; d.innerText=t; a.appendChild(d); a.scrollTop=a.scrollHeight;
+        }
+        async function ask(t) {
+            let p = (t==='notes')?`नोट्स दें`:(t==='qa')?`प्रश्न-उत्तर दें`:`ट्रिक बताएं`;
+            addM(p, 'u'); await call(p);
+        }
+        async function sendMsg() {
+            const i=document.getElementById('inp'); const v=i.value; if(!v)return; addM(v,'u'); i.value=""; await call(v);
+        }
+        async function call(m) {
+            try {
+                const res = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${API_KEY}`, {
+                    method: "POST", headers: {"Content-Type": "application/json"},
+                    body: JSON.stringify({contents: [{parts: [{text: `आप ओझा जी हैं। कक्षा ${cL}, विषय ${sB} पढ़ा रहे हैं। हिंदी में मनेमोनिक्स के साथ जवाब दें: ${m}`}]}]})
+                });
+                const d = await res.json(); addM(d.candidates[0].content.parts[0].text, 'a');
+            } catch (e) { addM("त्रुटि: इंटरनेट चेक करें।", 'a'); }
+        }
+        window.onload = type;
+    </script>
+</body>
+</html>
